@@ -1,0 +1,19 @@
+{% extends 'form.html' %}
+{% block load %}
+    {% load static %}
+    {% load crispy_forms_tags %}
+{% endblock %}
+
+{% block controls %}
+     {% csrf_token %}
+     {{ form|crispy }}
+{% endblock %}
+
+{% block botones %}
+    <button type="submit" class="btn btn-primary">
+        Guardar registro
+    </button>
+    <a href="{% url 'clientes' %}" class="btn btn-danger ">
+        Cancelar
+    </a>
+{% endblock %}

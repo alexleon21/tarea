@@ -1,0 +1,138 @@
+{% extends 'list.html' %}
+{% block load %}
+    {% load static %}
+    {%load crispy_forms_tags %}
+    {% load crispy_forms_field %}
+{% endblock %}
+{% block contenido %}
+  <br>
+  <form class="mt-5"  method="POST" id="form" >
+   {% csrf_token %}
+   <div class="card card-secondary ">
+        <div class="card-header d-flex justify-content-center bg-info " >
+            <h5 class=" text-white">
+                {{ titulo }}
+            </h5>
+        </div>
+        <div class="card-body ">
+            <div class="row">
+                <div class="col-lg-8">
+                  <div class="card card-secondary" style="margin-top: -10px">
+                    <div class="card-header d-flex justify-content-center bg-secondary" >
+                        <h5 class="card-title text-white">
+                            Detalle De Cuotas Del Credito
+                        </h5>
+                    </div>
+                    <div class="card-body table-responsive">
+                       <div class="form-group btn-group-sm d-flex ">
+                            <label class="mx-2 ">Fecha</label>
+                            <select class="form-control flex-grow-1" id="cboFecha">
+                                 {% for fecha in fechas %}
+                                     <option value="{{ fecha.id }}">
+                                         {{ fecha.fecha|date:"Y-m-d" }}
+                                     </option>
+                                 {% endfor %}
+                            </select>
+                            <label class="mx-2 ">Cuota</label>
+                            <input type="number" class="form-control " id="idCuota" >
+                            <button type="button" class="btn btn-info " id="btnPago">Agregar</button>
+                        </div>
+
+                        <table class="table table-bordered" id="data">
+                            <thead>
+                              <tr>
+                                <th>#</th>
+                                <th>Fecha</th>
+                                <th>Cuota</th>
+                                <th>Estado</th>
+                                <th class="text-center text-danger">Pagar</th>
+                              </tr>
+                            </thead>
+                            <tbody id="detalle">
+                                {% for cuota in cuotas %}
+                                  <tr data-id="{{ cuota.id }}" data-estado="{{ cuota.estado }}">
+                                    <td>{{ forloop.counter }}</td>
+                                    <td>{{ cuota.fecha_pagar|date:"d-m-Y" }}</td>
+                                    <td>{{ cuota.cuota }}</td>
+                                    <td>{{ cuota.get_estado_display }}</td>
+                                    <td class="text-center text-danger">
+                                        <input type="checkbox" class="estado-checkbox" {% if cuota.estado == 1 %}checked{% endif %} />
+                                        <input type="hidden" name="cuota_data[]" value="{{ cuota.id }},{{ cuota.estado }}" />💰
+                                    </td>
+                                  </tr>
+                                {% endfor %}
+                              </tbody>
+                            <tfoot>
+                            </tfoot>
+                        </table>
+                       </div>
+                  </div>
+                </div>
+                <div class="col-lg-4">
+                  <div class="card card-secondary " style="margin-top: -10px">
+                    <div class="card-header d-flex justify-content-center bg-secondary" >
+                        <h5 class="card-title text-white">
+                            Informacion del Credito
+                        </h5>
+                    </div>
+                    <div class="card-body">
+                       <div class="d-flex justify-content-between">
+                        <div class="form-group ">
+                            <label>Fecha</label>
+                             {{ form.fecha_credito }}
+                        </div>
+                        <div class="form-group">
+                             {{ form.credito|as_crispy_field }}
+                        </div>
+                       </div>
+                       <div class="d-flex justify-content-between">
+                         Cliente {% crispy_field form.cliente 'class' 'form-control mx-2' %}
+                       </div>
+                       <div class="d-flex justify-content-between">
+                        <div class="form-group">
+                            {{ form.numero_pagos|as_crispy_field }}
+                        </div>
+                        <div class="form-group">
+                            {{ form.cuota|as_crispy_field }}
+                        </div>
+                       </div>
+                      <div class="d-flex justify-content-between">
+                       <div class="form-group">
+                            <label>Fecha Primer Pago</label>
+                            {{ form.fecha_primer_pago }}
+                        </div>
+                       <div class="form-group">
+                           {{ form.saldo|as_crispy_field }}
+                       </div>
+                      </div>
+                        <div class="form-group" style="margin-top: -24px" >
+                             {{ form.motivo|as_crispy_field }}
+                        </div>
+                        <button type="button" id="btnGenerar" class="btn btn-info">Generar pagos</button>
+                      </div>
+                  </div>
+                </div>
+            </div>
+        </div>
+       {% block botones_pie %}
+        <div class="card-footer bg-light" style="margin-top: -1rem">
+         <button id="btnGrabar" type="submit" class="btn btn-info">
+              Guardar registro
+         </button>
+         <a class="btn btn-danger" href="{% url 'cuenta' %}">Regresar</a>
+        </div>
+       {% endblock %}
+   </div>
+  </form>
+{% endblock %}
+
+{% block js %}
+   <script  type="text/javascript" >
+      var save = '{{ url_grabar }}'
+      console.log(save)
+   </script>
+    <script>
+    const crear_cuenta_url = "{% url 'crear_cuentas_cobrar' %}";
+    </script>
+   <script  type="text/javascript" src="{% static 'js/credito.js' %}"></script>
+{% endblock %}

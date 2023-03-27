@@ -1,0 +1,17 @@
+{% extends 'form.html' %}
+{% block load %}
+    {% load static %}
+{% endblock %}
+
+{% block controls %}
+     {% csrf_token %}
+      <h2 class="text-danger text-center">¿Desea Eliminar la cuenta?</h2>
+      <h4 class="text-danger text-center"> {{ cuenta.id }} - {{ cuenta.cliente.nombre }}</h4>
+{% endblock %}
+
+{% block botones %}
+     <button class="btn btn-danger" type="submit">Eliminar</button>
+     <a class="btn btn-warning" href="{% url 'cuenta' %}" >Regresar</a>
+{% endblock %}
+
+

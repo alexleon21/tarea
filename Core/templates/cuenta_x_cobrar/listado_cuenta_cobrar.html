@@ -1,0 +1,38 @@
+{% extends 'list.html' %}
+{% block columns %}
+    <tr>
+       <th>Cliente</th>
+       <th>Fecha Credito</th>
+       <th>Credito</th>
+       <th>Numero Pagos</th>
+       <th>Cuota</th>
+       <th>Saldo</th>
+       <th>Estado</th>
+       <th>Acciones</th>
+    </tr>
+{% endblock %}
+
+{% block rows %}
+  {% for cuenta in cuentas_cobrar %}
+    <tr>
+       <td>{{cuenta.cliente.nombre}}</td>
+       <td>{{cuenta.fecha_credito|date:"d-m-Y" }}</td>
+        <td>{{cuenta.credito}}</td>
+       <td>{{cuenta.numero_pagos}}</td>
+       <td>{{cuenta.cuota}}</td>
+       <td>{{cuenta.saldo}}</td>
+       <td>{% if cuenta.estado == 1 %}Pagado{% else %}Pendiente{% endif %}</td>
+       <td >
+          <a href="{% url 'editar_cuenta' cuenta.id %}">💰</a>
+          <a href="{% url 'eliminar_cuenta' cuenta.id %}">❌</a>
+       </td>
+    </tr>
+   {% endfor %}
+{% endblock %}
+
+{% block botones_pie %}
+   <a class="btn btn-dark" href="{% url 'crear_cuentas_cobrar' %}">Nuevo Registro</a>
+{% endblock %}
+
+
+

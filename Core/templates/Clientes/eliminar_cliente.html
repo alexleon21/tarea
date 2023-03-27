@@ -1,0 +1,18 @@
+{% extends 'form.html' %}
+{% block load %}
+    {% load static %}
+{% endblock %}
+
+{% block controls %}
+     {% csrf_token %}
+      <h2 class="text-danger text-center">¿Desea Eliminar al cliente?
+      </h2>
+      <h4 class="text-danger text-center"> {{ cliente.id }} - {{ cliente.nombre }}</h4>
+{% endblock %}
+
+{% block botones %}
+     <button class="btn btn-danger" type="submit">Eliminar</button>
+     <a class="btn btn-warning" href="{% url 'clientes' %}" >Regresar</a>
+{% endblock %}
+
+

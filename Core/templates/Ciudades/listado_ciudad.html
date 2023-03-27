@@ -1,0 +1,129 @@
+{% extends 'index.html' %}
+{% load static %}
+{% block contenido %}
+   <div class="container-fluid card card-primary mt-5">
+   <br>
+     <div class="card-header bg-info" >
+        <h5 class="card-title text-center text-light">
+            {{ titulo }}
+        </h5>
+     </div>
+    <div class="card-body table-responsive ">
+      <form action="" method="GET">
+          <div class="input-group btn-group-sm ">
+            <input class="form-control" type="text" name="query" value="{{ query }}" placeholder="Buscar... por nombre" id="idInputSearch" aria-describedby="basic-addon2"/>
+            <button type="submit" class="btn btn-primary" id="idSearchSp"><span style="font-size:20px ">🔎</span></button>
+          </div>
+      </form>
+
+      <table class="table table-striped  mt-2">
+            <thead class="text-center bg-secondary text-light">
+               <tr>
+                   <th>Ciudad</th>
+                   <th>Estado</th>
+                   <th>Acciones</th>
+               </tr>
+            </thead>
+            <tbody>
+              {% for c in ciudad %}
+                <tr>
+                   <td>{{c.descripcion}}</td>
+                   <td>{% if c.estado %}
+                         Activo
+                       {% else %}
+                         Cancelado
+                       {% endif %}
+                   </td>
+                   <td >
+                      <a href="{% url 'editar_ciudad'  c.id %}">📝</a>
+                      <a href="{% url 'eliminar_ciudad' c.id %}">❌</a>
+
+                   </td>
+                 </tr>
+                  {% block modal %}
+                    <!-- Modal -->
+                        <!-- Modal -->
+                    <div class="modal fade" id="clienteModal{{ cliente.pk }}" tabindex="-1" role="dialog" aria-labelledby="clienteModalLabel{{ cliente.pk }}" aria-hidden="true">
+                      <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header bg-secondary">
+                            <h5 class="modal-title text-white " id="clienteModalLabel{{ cliente.pk }}">Datos del Cliente</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body" id="body">
+                             <div class="d-flex justify-content-center">
+                               <img src="{{ cliente.foto.url}}" width="200px">
+                               <div class="datos">
+                               <p>{{c.descripcion}}</p>
+                               <p>{% if cliente.estado %}
+                                     Activo
+                                   {% else %}
+                                     Cancelado
+                                   {% endif %}
+                               </p>
+                              </div>
+                             </div>
+                          </div>
+                          <div class="modal-footer  text-white">
+                            <button type="button" class="btn btn-success btn-block text-center" data-dismiss="modal">Close</button>
+
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+                  {% endblock %}
+              {% endfor %}
+            </tbody>
+        </table>
+   {# inicio pagineo #}
+     <nav aria-label="Page navigation example" style="margin-top: -2.5rem">
+        <ul class="pagination justify-content-center mt-5">
+
+                        {% if page_obj.has_previous %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a>
+                            </li>
+                        {% endif %}
+
+                        {% for i in page_obj.paginator.page_range %}
+
+                            {% if i == page_obj.number %}
+                                <li class="page-item active">
+                                    <a class="page-link" href="#">{{ i }}</a>
+                                </li>
+                            {% else %}
+                                <li class="page-item">
+                                    <a class="page-link" href="?page={{ i }}">{{ i }}</a>
+                                </li>
+                            {% endif %}
+
+                        {% endfor %}
+
+                        {% if page_obj.has_next %}
+                            <li class="page-item">
+                                <a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a>
+                            </li>
+                        {% endif %}
+
+                    </ul>
+     </nav>
+   {# fin pagineo #}
+    </div>
+    <div class="card-footer bg-light" style="margin-top: -2rem">
+        <a class="btn btn-dark" href="{% url 'crear_ciudad' %}">Nuevo Registro</a>
+     </div>
+
+   </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+     function mostrarModal(pk) {
+       console.log('#clienteModal' + pk);
+       $('#clienteModal' + pk).modal('show');
+     }
+
+    </script>
+{% endblock %}
